@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Inter } from "next/font/google";
+import { Figtree } from "next/font/google";
 
 import { AuthProvider } from "@/lib/providers/auth-provider";
 
@@ -8,13 +8,13 @@ import Footer from "@/components/layout/footer";
 
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const figtree = Figtree({ subsets: ["latin"], variable: "--font-figtree" });
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" data-theme="default">
       <AuthProvider>
-        <body className={`${inter.className} text-base-content`}>
+        <body className={`${figtree.className} text-base-content`}>
           <Navbar />
 
           <main className="min-h-screen bg-background text-foreground">
