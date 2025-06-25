@@ -1,14 +1,11 @@
 "use client";
-
 import { useState } from "react";
-
+import Step1 from "./components/step-1";
+import Step2 from "./components/step-2";
+import Step3 from "./components/step-3";
+import LoginForm from "./components/login-form";
 import { supabase } from "@/lib/supabase/client";
-
 import { Button } from "@/components/ui/button";
-
-import Step1 from "./step-1";
-import Step2 from "./step-2";
-import Step3 from "./step-3";
 
 export default function SignupPage() {
   const [step, setStep] = useState(1);
@@ -19,6 +16,7 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
 
   // Step 1: Email/password signup
   function handleStep1Success(email: string, password: string) {
@@ -58,13 +56,9 @@ export default function SignupPage() {
   if (success) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="flex flex-col gap-6 mx-auto w-full max-w-md">
-          <div className="text-2xl font-bold text-center">
-            Welcome to Pitch Arena!
-          </div>
-          <div className="mb-4 text-center text-muted-foreground">
-            Your account has been created and profile set up.
-          </div>
+        <div className="flex flex-col gap-6 max-w-md w-full mx-auto">
+          <div className="text-2xl font-bold text-center">Welcome to Pitch Arena!</div>
+          <div className="text-center text-muted-foreground mb-4">Your account has been created and profile set up.</div>
           <Button className="w-full" asChild>
             <a href="/dashboard">Go to Dashboard</a>
           </Button>
@@ -73,21 +67,22 @@ export default function SignupPage() {
     );
   }
 
-  if (step === 1) {
-    return <Step1 onSuccess={handleStep1Success} />;
-  }
-  if (step === 2) {
-    return <Step2 onSelect={handleStep2Select} selectedRole={role} />;
-  }
-  if (step === 3) {
-    return (
-      <Step3
-        onSubmit={handleStep3Submit}
-        loading={loading}
-        error={error}
-        initialName={name}
-      />
-    );
-  }
-  return null;
-}
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen w-full">
+      <div className="mb-6">
+        <Button variant="ghost" onClick={() => setShowLogin((v) => !v)}>
+          {showLogin ? "Don't have an account? Sign up" : "Already have an account? Log in"}
+        </Button>
+      </div>
+      {showLogin ? (
+        <LoginForm onSuccess={() => window.location.href = "/dashboard"} />
+      ) : step === 1 ? (
+        <Step1 onSuccess={handleStep1Success} />
+      ) : step === 2 ? (
+        <Step2 onSelect={handleStep2Select} selectedRole={role} />
+      ) : (
+        <Step3 onSubmit={handleStep3Submit} loading={loading} error={error} initialName={name} />
+      )}
+    </div>
+  );
+} 
