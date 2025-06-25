@@ -1,6 +1,6 @@
 "use client";
 
-import { StartupCard } from "@/components/ui/startup-card";
+import { StartupCard } from "@/components/startup-card";
 
 const mockStartups = [
   {
