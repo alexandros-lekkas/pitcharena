@@ -1,0 +1,28 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Supabase is used for all database queries.
+
+This is a Next.js project with both server and client side routes.
+Client side components are marked with `"use client"`.
+
+Client side:
+Use `lib/supabase/client.ts` for Supabase (no elevated privileges).
+
+Server side:
+Use `lib/supabase/server.ts` (called `supabaseAdmin`) with elevated privileges.
+
+Auth uses OTP (one-time password).
+Send the OTP using client-side Supabase.
+Verify the code using a server-side `/verify` route.
+Auth context is in `auth-provider.tsx`.
+To access user on the client side, use:
+`const { user } = useAuth()`
+
+The full database schema is in `types/supabase.d.ts`.
+Always check this when writing database queries.
+To type-check something we return, import from it and use:
+`Tables<"specific_table">`
+

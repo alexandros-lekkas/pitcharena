@@ -31,10 +31,10 @@ export interface StartupCardProps {
 
 export function StartupCard(props: StartupCardProps) {
   return (
-    <Card className="relative flex flex-col gap-3 p-6 bg-white rounded-xl shadow-md border-l-4 border-secondary min-h-[320px]">
+    <Card className="relative flex flex-col gap-3 p-6 bg-card text-card-foreground rounded-xl shadow-md border-l-4 border-secondary min-h-[320px]">
       {/* Logo and Name Row */}
       <div className="flex gap-3 items-center mb-1">
-        <div className="flex overflow-hidden justify-center items-center w-12 h-12 text-xl font-bold text-gray-300 bg-gray-100 rounded">
+        <div className="flex overflow-hidden justify-center items-center w-12 h-12 text-xl font-bold rounded text-muted bg-muted">
           {props.logo ? (
             <img
               src={props.logo}
@@ -54,33 +54,39 @@ export function StartupCard(props: StartupCardProps) {
               <ReactCountryFlag
                 countryCode={props.country}
                 svg
+                style={{
+                  width: "1.5em",
+                  height: "1.5em",
+                  verticalAlign: "middle",
+                  borderRadius: "0.2em",
+                }}
                 title={props.country}
                 aria-label={props.country}
               />
             </span>
-            <span className="ml-2 text-xs text-gray-500 whitespace-nowrap">
+            <span className="ml-2 text-xs whitespace-nowrap text-muted-foreground">
               {daysAgo(props.listedAt)}
             </span>
           </div>
         </div>
       </div>
       {/* Description */}
-      <div className="text-gray-700 text-base mb-2 min-h-[48px] line-clamp-2">
+      <div className="text-base mb-2 min-h-[48px] line-clamp-2 text-muted-foreground">
         {props.description}
       </div>
       {/* Founders */}
       <div className="mb-2">
-        <span className="text-sm text-gray-500">Founders:</span>
+        <span className="text-sm text-muted-foreground">Founders:</span>
         <span className="flex gap-1 items-center ml-2">
           {props.founders.length === 0 ? (
-            <Avatar className="w-7 h-7 text-gray-500 bg-gray-200">
+            <Avatar className="w-7 h-7 text-muted-foreground bg-muted">
               <User className="w-4 h-4" />
             </Avatar>
           ) : (
             props.founders.map((f, i) => (
               <Avatar
                 key={i}
-                className="flex justify-center items-center -ml-2 w-7 h-7 text-xs font-bold text-gray-700 bg-gray-200 border-2 border-white first:ml-0"
+                className="flex justify-center items-center -ml-2 w-7 h-7 text-xs font-bold border-2 text-primary bg-muted border-card first:ml-0"
               >
                 {f.length <= 2
                   ? f
@@ -99,8 +105,8 @@ export function StartupCard(props: StartupCardProps) {
           variant={props.incorporated ? "default" : "secondary"}
           className={
             props.incorporated
-              ? "bg-primary text-white px-3"
-              : "bg-gray-200 text-gray-600 px-3"
+              ? "bg-primary text-primary-foreground px-3"
+              : "bg-muted text-muted-foreground px-3"
           }
         >
           Incorporated: {props.incorporated ? "Yes" : "No"}
@@ -109,8 +115,8 @@ export function StartupCard(props: StartupCardProps) {
           variant={props.funded ? "default" : "secondary"}
           className={
             props.funded
-              ? "bg-primary text-white px-3"
-              : "bg-gray-200 text-gray-600 px-3"
+              ? "bg-primary text-primary-foreground px-3"
+              : "bg-muted text-muted-foreground px-3"
           }
         >
           Funded: {props.funded ? "Yes" : "No"}

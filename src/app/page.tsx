@@ -1,6 +1,8 @@
 "use client";
 
 import { StartupCard } from "@/components/startup-card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const mockStartups = [
   {
@@ -43,12 +45,12 @@ const mockStartups = [
 
 export default function HomePage() {
   return (
-    <div className="px-4 py-10 mx-auto max-w-7xl">
+    <div className="px-4 py-10 mx-auto max-w-7xl bg-background text-foreground">
       {/* Search, Filter, Trending Bar */}
       <div className="flex flex-col gap-4 mb-8 md:flex-row md:items-center">
-        <div className="flex flex-1 items-center px-4 py-3 bg-white rounded-lg border border-gray-200 shadow-sm">
+        <div className="flex flex-1 items-center px-4 py-3 rounded-lg border shadow-sm bg-card text-card-foreground border-border">
           <svg
-            className="mr-2 w-5 h-5 text-gray-400"
+            className="mr-2 w-5 h-5 text-muted-foreground"
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
@@ -57,12 +59,15 @@ export default function HomePage() {
             <circle cx="11" cy="11" r="8" />
             <path d="M21 21l-4.35-4.35" />
           </svg>
-          <input
-            className="flex-1 text-base bg-transparent outline-none"
+          <Input
+            className="flex-1 px-0 text-base bg-transparent border-0 shadow-none outline-none"
             placeholder="Search startups..."
           />
         </div>
-        <button className="flex gap-2 items-center px-5 py-2 font-semibold bg-white rounded-lg border transition border-primary text-primary hover:bg-primary/10">
+        <Button
+          variant="outline"
+          className="flex gap-2 items-center px-5 py-2 font-semibold rounded-lg border transition bg-card text-card-foreground border-border hover:bg-muted"
+        >
           <svg
             className="w-5 h-5"
             fill="none"
@@ -73,8 +78,8 @@ export default function HomePage() {
             <path d="M4 6h16M4 12h16M4 18h16" />
           </svg>
           Filter
-        </button>
-        <span className="px-5 py-2 text-base font-semibold text-white rounded-full bg-secondary">
+        </Button>
+        <span className="px-5 py-2 text-base font-semibold rounded-full bg-secondary text-secondary-foreground">
           Trending
         </span>
       </div>
@@ -86,9 +91,12 @@ export default function HomePage() {
       </div>
       {/* Load More Button */}
       <div className="flex justify-center mt-10">
-        <button className="px-8 py-3 font-semibold bg-white rounded-lg border-2 transition border-primary text-primary hover:bg-primary/10">
+        <Button
+          variant="outline"
+          className="px-8 py-3 font-semibold rounded-lg border-2 transition bg-card text-card-foreground border-border hover:bg-muted"
+        >
           Load More Startups
-        </button>
+        </Button>
       </div>
     </div>
   );
