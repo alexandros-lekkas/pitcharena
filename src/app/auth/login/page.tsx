@@ -1,88 +1,81 @@
 "use client";
-import { useState } from "react";
-import Step1 from "./components/step-1";
-import Step2 from "./components/step-2";
-import Step3 from "./components/step-3";
-import LoginForm from "./components/login-form";
-import { supabase } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
 
-export default function SignupPage() {
-  const [step, setStep] = useState(1);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState<"founder" | "investor">("founder");
-  const [name, setName] = useState("");
+import { useState } from "react";
+import { cn } from "@/lib/utils/tailwind";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { supabase } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
+
+export default function LoginForm({ onSuccess }: { onSuccess?: () => void }) {
+  const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
+  const router = useRouter();
 
-  // Step 1: Email/password signup
-  function handleStep1Success(email: string, password: string) {
-    setEmail(email);
-    setPassword(password);
-    setStep(2);
-  }
-
-  // Step 2: Role select
-  function handleStep2Select(selectedRole: "founder" | "investor") {
-    setRole(selectedRole);
-    setStep(3);
-  }
-
-  // Step 3: Name
-  async function handleStep3Submit(name: string) {
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault();
     setLoading(true);
     setError(null);
-    setName(name);
-    // Update user profile in your users table
-    const user = (await supabase.auth.getUser()).data.user;
-    if (!user) {
-      setError("No user session");
-      setLoading(false);
-      return;
-    }
-    const { error } = await supabase.from("users").upsert({
-      id: user.id,
-      name,
-      role,
+    const { error } = await supabase.auth.signInWithPassword({
+      email: form.email,
+      password: form.password,
     });
     setLoading(false);
     if (error) setError(error.message);
-    else setSuccess(true);
-  }
-
-  if (success) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="flex flex-col gap-6 max-w-md w-full mx-auto">
-          <div className="text-2xl font-bold text-center">Welcome to Pitch Arena!</div>
-          <div className="text-center text-muted-foreground mb-4">Your account has been created and profile set up.</div>
-          <Button className="w-full" asChild>
-            <a href="/dashboard">Go to Dashboard</a>
-          </Button>
-        </div>
-      </div>
-    );
+    else {
+      if (onSuccess) onSuccess();
+      router.push("/dashboard");
+    }
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen w-full">
-      <div className="mb-6">
-        <Button variant="ghost" onClick={() => setShowLogin((v) => !v)}>
-          {showLogin ? "Don't have an account? Sign up" : "Already have an account? Log in"}
-        </Button>
-      </div>
-      {showLogin ? (
-        <LoginForm onSuccess={() => window.location.href = "/dashboard"} />
-      ) : step === 1 ? (
-        <Step1 onSuccess={handleStep1Success} />
-      ) : step === 2 ? (
-        <Step2 onSelect={handleStep2Select} selectedRole={role} />
-      ) : (
-        <Step3 onSubmit={handleStep3Submit} loading={loading} error={error} initialName={name} />
-      )}
+    <div className={cn("flex justify-center items-center min-h-[60vh]")}> 
+      <Card className="mx-auto w-full max-w-md">
+        <CardHeader>
+          <CardTitle>Login to Pitch Arena</CardTitle>
+          <CardDescription>
+            Enter your email and password to log in
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleLogin} className="flex flex-col gap-6">
+            <div className="grid gap-3">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="m@example.com"
+                required
+                value={form.email}
+                onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+              />
+            </div>
+            <div className="grid gap-3">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                required
+                value={form.password}
+                onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
+              />
+            </div>
+            {error && <div className="text-sm text-destructive">{error}</div>}
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Logging in..." : "Login"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
-} 
+}

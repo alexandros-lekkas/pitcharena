@@ -3,47 +3,56 @@
 import { StartupCard } from "@/components/startup-card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
-const mockStartups = [
-  {
-    id: "1",
-    name: "EcoTech Solutions",
-    logo: "",
-    founders: ["AB", "CD"],
-    incorporated: true,
-    funded: false,
-    openToInvestment: true,
-    country: "US",
-    listedAt: "2024-06-01T12:00:00Z",
-    description: "Sustainable technology for a greener future",
-  },
-  {
-    id: "2",
-    name: "FinanceAI",
-    logo: "",
-    founders: ["EF"],
-    incorporated: true,
-    funded: true,
-    openToInvestment: false,
-    country: "GB",
-    listedAt: "2024-05-28T09:00:00Z",
-    description: "AI-powered financial planning for everyone",
-  },
-  {
-    id: "3",
-    name: "HealthTrack Pro",
-    logo: "",
-    founders: ["GH", "IJ", "KL"],
-    incorporated: false,
-    funded: false,
-    openToInvestment: true,
-    country: "CA",
-    listedAt: "2024-06-03T09:00:00Z",
-    description: "Personal health monitoring made simple",
-  },
-];
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase/client";
 
 export default function HomePage() {
+  const [startups, setStartups] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchStartups() {
+      // Fetch all startups
+      const { data: startupsData, error } = await supabase
+        .from("startups")
+        .select("*")
+        .order("listed_at", { ascending: false });
+      if (error) {
+        setStartups([]);
+        setLoading(false);
+        return;
+      }
+      // Fetch all founders for all startups
+      const { data: foundersData } = await supabase
+        .from("startup_founders")
+        .select("startup_id, users(name)");
+      // Map startup_id to array of founder names
+      const foundersMap: Record<string, string[]> = {};
+      if (foundersData) {
+        for (const row of foundersData) {
+          if (!foundersMap[row.startup_id]) foundersMap[row.startup_id] = [];
+          if (row.users?.name) foundersMap[row.startup_id].push(row.users.name);
+        }
+      }
+      // Map startups to StartupCard props
+      const mapped = (startupsData || []).map((s: any) => ({
+        id: s.id,
+        name: s.name,
+        logo: s.logo_url,
+        founders: foundersMap[s.id] || [],
+        incorporated: s.incorporated,
+        funded: s.funded,
+        openToInvestment: s.open_to_investment,
+        country: s.country,
+        listedAt: s.listed_at,
+        description: s.description,
+      }));
+      setStartups(mapped);
+      setLoading(false);
+    }
+    fetchStartups();
+  }, []);
+
   return (
     <div className="px-4 py-10 mx-auto max-w-7xl bg-background text-foreground">
       {/* Search, Filter, Trending Bar */}
@@ -85,9 +94,15 @@ export default function HomePage() {
       </div>
       {/* Startup Cards Grid */}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {mockStartups.map((startup) => (
-          <StartupCard key={startup.id} {...startup} />
-        ))}
+        {loading ? (
+          <div className="col-span-full flex justify-center py-20 text-lg text-muted-foreground">Loading startups...</div>
+        ) : startups.length === 0 ? (
+          <div className="col-span-full flex justify-center py-20 text-lg text-muted-foreground">No startups found.</div>
+        ) : (
+          startups.map((startup) => (
+            <StartupCard key={startup.id} {...startup} />
+          ))
+        )}
       </div>
       {/* Load More Button */}
       <div className="flex justify-center mt-10">
