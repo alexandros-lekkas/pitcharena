@@ -9,7 +9,7 @@ export default function BookmarkButton({ startupId }: { startupId: string }) {
       variant={bookmarked ? "default" : "outline"}
       onClick={() => setBookmarked((b) => !b)}
       aria-pressed={bookmarked}
-      className="flex items-center gap-2"
+      className="flex gap-2 items-center"
     >
       <span>{bookmarked ? "Bookmarked" : "Bookmark"}</span>
       <svg
