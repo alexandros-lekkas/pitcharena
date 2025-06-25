@@ -1,6 +1,6 @@
 "use client";
 
-import { StartupCard } from "@/components/startup-card";
+import { StartupCard } from "@/app/startup/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
@@ -95,9 +95,9 @@ export default function HomePage() {
       {/* Startup Cards Grid */}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
         {loading ? (
-          <div className="col-span-full flex justify-center py-20 text-lg text-muted-foreground">Loading startups...</div>
+          <div className="flex col-span-full justify-center py-20 text-lg text-muted-foreground">Loading startups...</div>
         ) : startups.length === 0 ? (
-          <div className="col-span-full flex justify-center py-20 text-lg text-muted-foreground">No startups found.</div>
+          <div className="flex col-span-full justify-center py-20 text-lg text-muted-foreground">No startups found.</div>
         ) : (
           startups.map((startup) => (
             <StartupCard key={startup.id} {...startup} />
