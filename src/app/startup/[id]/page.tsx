@@ -49,20 +49,20 @@ export default function StartupDetailPage() {
 
   if (loading)
     return (
-      <div className="flex items-center justify-center min-h-screen">Loading...</div>
+      <div className="flex justify-center items-center min-h-screen">Loading...</div>
     );
   if (error || !startup)
     return (
-      <div className="flex items-center justify-center min-h-screen text-destructive">
+      <div className="flex justify-center items-center min-h-screen text-destructive">
         {error || "Startup not found"}
       </div>
     );
 
   return (
-    <div className="max-w-2xl mx-auto py-10 px-4">
+    <div className="px-4 py-10 mx-auto max-w-2xl">
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex gap-2 items-center">
             {startup.name}
             <span title={startup.country} className="text-xl">
               <ReactCountryFlag
@@ -83,7 +83,7 @@ export default function StartupDetailPage() {
             <img
               src={startup.logo_url}
               alt={startup.name}
-              className="w-32 h-32 rounded-xl object-cover bg-muted mb-4"
+              className="object-cover mb-4 w-32 h-32 rounded-xl bg-muted"
             />
           )}
           <div className="mb-4 text-muted-foreground">{startup.description}</div>

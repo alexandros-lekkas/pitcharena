@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 
-export default function LoginForm({ onSuccess }: { onSuccess?: () => void }) {
+export default function LoginForm() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -32,13 +32,12 @@ export default function LoginForm({ onSuccess }: { onSuccess?: () => void }) {
     setLoading(false);
     if (error) setError(error.message);
     else {
-      if (onSuccess) onSuccess();
       router.push("/dashboard");
     }
   }
 
   return (
-    <div className={cn("flex justify-center items-center min-h-[60vh]")}> 
+    <div className={cn("flex justify-center items-center min-h-[60vh]")}>
       <Card className="mx-auto w-full max-w-md">
         <CardHeader>
           <CardTitle>Login to Pitch Arena</CardTitle>
@@ -56,7 +55,9 @@ export default function LoginForm({ onSuccess }: { onSuccess?: () => void }) {
                 placeholder="m@example.com"
                 required
                 value={form.email}
-                onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, email: e.target.value }))
+                }
               />
             </div>
             <div className="grid gap-3">
@@ -66,7 +67,9 @@ export default function LoginForm({ onSuccess }: { onSuccess?: () => void }) {
                 type="password"
                 required
                 value={form.password}
-                onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, password: e.target.value }))
+                }
               />
             </div>
             {error && <div className="text-sm text-destructive">{error}</div>}
