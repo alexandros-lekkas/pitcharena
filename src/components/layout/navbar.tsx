@@ -30,7 +30,7 @@ export default function Navbar() {
   const { user } = useAuth();
   
   return (
-    <nav className="flex justify-between items-center px-4 md:px-8 py-4 w-full shadow-sm bg-primary">
+    <nav className="flex justify-between items-center px-4 py-4 w-full shadow-sm md:px-8 bg-primary">
       {/* Logo */}
       <Link href="/" className="flex gap-2 items-center">
         <Rocket className="w-7 h-7 text-secondary" />
@@ -40,7 +40,7 @@ export default function Navbar() {
       </Link>
 
       {/* Desktop Nav */}
-      <div className="hidden md:flex gap-8 items-center font-medium text-primary-foreground">
+      <div className="hidden gap-8 items-center font-medium md:flex text-primary-foreground">
         <Link href="/" className="flex gap-1 items-center hover:underline">
           <Home className="w-5 h-5" /> Home
         </Link>
@@ -60,7 +60,7 @@ export default function Navbar() {
       </div>
 
       {/* Desktop User/Auth */}
-      <div className="hidden md:flex gap-3 items-center">
+      <div className="hidden gap-3 items-center md:flex">
         {user ? (
           <div className="flex gap-3 items-center">
             <Avatar className="w-8 h-8 text-base font-bold bg-secondary text-secondary-foreground">
@@ -106,7 +106,7 @@ export default function Navbar() {
       </div>
 
       {/* Mobile Nav */}
-      <div className="md:hidden flex items-center">
+      <div className="flex items-center md:hidden">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" aria-label="Open menu">
