@@ -27,26 +27,23 @@ export async function middleware(request: NextRequest) {
   //   return NextResponse.redirect(new URL("/waitlist", request.url));
   // }
 
-  // if (pathname === "/auth/callback") return response;
-
   const supabase = createMiddlewareClient({ req: request, res: response });
-
   const {
     data: { session },
   } = await supabase.auth.getSession();
 
-  // if (pathname.startsWith("/user")) {
-  //   if (!session) {
-  //     return NextResponse.redirect(new URL("/auth", request.url));
-  //   }
-  //   // ... affiliate logic ...
-  // }
-
-  // if (pathname === "/") {
-  //   if (session) {
-  //     return NextResponse.redirect(new URL("/user", request.url));
-  //   }
-  // }
+  // Protect dashboard, startup/list, user, chats, bookmarks
+  if (
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/startup/list") ||
+    pathname.startsWith("/user") ||
+    pathname.startsWith("/chats") ||
+    pathname.startsWith("/bookmarks")
+  ) {
+    if (!session) {
+      return NextResponse.redirect(new URL("/auth/login", request.url));
+    }
+  }
 
   // Just for future use: session is available here
   // console.log('User session:', session);
