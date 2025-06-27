@@ -1,15 +1,12 @@
-"use client";
+import { SwordsIcon } from "lucide-react";
 
-import { Rocket } from "lucide-react";
-import * as React from "react";
-
-export default function Logo({ className = "", size = 28 }: { className?: string; size?: number }) {
+export function Logo() {
   return (
-    <span className={`flex gap-2 items-center ${className}`}>
-      <Rocket className="text-secondary" width={size} height={size} />
-      <span className="text-2xl font-bold tracking-tight text-secondary">
-        Pitch Arena
+    <div className="flex gap-2 items-center">
+      <SwordsIcon className="text-secondary size-8" />
+      <span className="text-2xl font-bold tracking-tight text-primary">
+        PitchArena
       </span>
-    </span>
+    </div>
   );
-} 
+}

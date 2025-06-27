@@ -3,13 +3,12 @@
 import Link from "next/link";
 
 import {
-  Home,
-  LayoutDashboard,
-  Plus,
-  Rocket,
+  PlusIcon,
+  LayoutDashboardIcon,
+  HomeIcon,
+  LogOut,
   LogIn,
   UserPlus,
-  LogOut,
   Menu,
 } from "lucide-react";
 
@@ -25,38 +24,36 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { Logo } from "@/components/logo";
+
+const navItems = [
+  { label: "Home", href: "/", icon: HomeIcon },
+  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboardIcon },
+  { label: "List Startup", href: "/startup/list", icon: PlusIcon },
+];
 
 export default function Navbar() {
   const { user } = useAuth();
 
   return (
-    <nav className="flex justify-between items-center px-4 py-4 w-full shadow-sm md:px-8 bg-primary">
-      {/* Logo */}
+    <nav className="flex justify-between items-center px-6 py-4 w-full bg-background/80 border-b-2  backdrop-blur-sm sticky top-0 z-50">
       <Link href="/" className="flex gap-2 items-center">
-        <Rocket className="w-7 h-7 text-secondary" />
-        <span className="text-2xl font-bold tracking-tight text-secondary">
-          Pitch Arena
-        </span>
+        <Logo />
       </Link>
 
       {/* Desktop Nav */}
-      <div className="hidden gap-8 items-center font-medium md:flex text-primary-foreground">
-        <Link href="/" className="flex gap-1 items-center hover:underline">
-          <Home className="w-5 h-5" /> Home
-        </Link>
-        <Link
-          href="/dashboard"
-          className="flex gap-1 items-center hover:underline"
-        >
-          <LayoutDashboard className="w-5 h-5" /> Dashboard
-        </Link>
-        <Separator orientation="vertical" className="h-6 bg-secondary/40" />
-        <Link
-          href="/startup/list"
-          className="flex gap-1 items-center hover:underline"
-        >
-          <Plus className="w-5 h-5 text-secondary" /> List Startup
-        </Link>
+      <div className="hidden gap-3 items-center font-medium md:flex">
+        {navItems.map(({ label, href, icon: Icon }) => (
+          <Button
+            key={label}
+            variant="outline"
+            asChild
+          >
+            <Link href={href}>
+              <Icon className="size-5" /> {label}
+            </Link>
+          </Button>
+        ))}
       </div>
 
       {/* Desktop User/Auth */}
@@ -114,21 +111,13 @@ export default function Navbar() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuItem asChild>
-              <Link href="/" className="flex gap-2 items-center">
-                <Home className="w-5 h-5" /> Home
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/dashboard" className="flex gap-2 items-center">
-                <LayoutDashboard className="w-5 h-5" /> Dashboard
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/startup/list" className="flex gap-2 items-center">
-                <Plus className="w-5 h-5 text-secondary" /> List Startup
-              </Link>
-            </DropdownMenuItem>
+            {navItems.map(({ label, href, icon: Icon }) => (
+              <DropdownMenuItem asChild key={label}>
+                <Link href={href} className="flex gap-2 items-center">
+                  <Icon className="w-5 h-5" /> {label}
+                </Link>
+              </DropdownMenuItem>
+            ))}
             <DropdownMenuSeparator />
             {user ? (
               <>
