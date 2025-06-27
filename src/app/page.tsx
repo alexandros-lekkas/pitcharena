@@ -55,11 +55,11 @@ export default function HomePage() {
 
   return (
     <div className="px-4 py-10 mx-auto max-w-7xl bg-background text-foreground">
-      {/* Search, Filter, Trending Bar */}
-      <div className="flex flex-col gap-4 mb-8 md:flex-row md:items-center">
-        <div className="flex flex-1 items-center px-4 py-3 rounded-lg border shadow-sm bg-card text-card-foreground border-border">
+      {/* Search Bar Only, right-aligned and smaller */}
+      <div className="flex justify-end mb-8">
+        <div className="flex items-center px-2 py-2 rounded-lg border shadow-sm bg-card text-card-foreground border-border w-full max-w-xs">
           <svg
-            className="mr-2 w-5 h-5 text-muted-foreground"
+            className="mr-2 w-4 h-4 text-muted-foreground"
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
@@ -69,28 +69,10 @@ export default function HomePage() {
             <path d="M21 21l-4.35-4.35" />
           </svg>
           <Input
-            className="flex-1 px-0 text-base bg-transparent border-0 shadow-none outline-none"
+            className="flex-1 px-0 text-sm bg-transparent border-0 shadow-none outline-none"
             placeholder="Search startups..."
           />
         </div>
-        <Button
-          variant="outline"
-          className="flex gap-2 items-center px-5 py-2 font-semibold rounded-lg border transition bg-card text-card-foreground border-border hover:bg-muted"
-        >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <path d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-          Filter
-        </Button>
-        <span className="px-5 py-2 text-base font-semibold rounded-full bg-secondary text-secondary-foreground">
-          Trending
-        </span>
       </div>
       {/* Startup Cards Grid */}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -103,15 +85,6 @@ export default function HomePage() {
             <StartupCard key={startup.id} {...startup} />
           ))
         )}
-      </div>
-      {/* Load More Button */}
-      <div className="flex justify-center mt-10">
-        <Button
-          variant="outline"
-          className="px-8 py-3 font-semibold rounded-lg border-2 transition bg-card text-card-foreground border-border hover:bg-muted"
-        >
-          Load More Startups
-        </Button>
       </div>
     </div>
   );

@@ -28,7 +28,7 @@ import {
 
 export default function Navbar() {
   const { user } = useAuth();
-  
+
   return (
     <nav className="flex justify-between items-center px-4 py-4 w-full shadow-sm md:px-8 bg-primary">
       {/* Logo */}

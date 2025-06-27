@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { X } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const tagOptions = [
   { label: "Incorporated", value: "incorporated" },
@@ -32,6 +34,9 @@ export default function ListStartupPage() {
   });
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [founders, setFounders] = useState<string[]>([]);
+  const [founderInput, setFounderInput] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -48,23 +53,43 @@ export default function ListStartupPage() {
     e.preventDefault();
     setError(null);
     setSuccess(false);
-    const { error } = await supabase.from("startups").insert({
+    // Insert startup
+    const { data: startupData, error } = await supabase.from("startups").insert({
       ...form,
       created_by: user.id,
-    });
-    if (error) setError(error.message);
-    else {
-      setSuccess(true);
-      setForm({
-        name: "",
-        logo_url: "",
-        description: "",
-        country: "",
-        incorporated: false,
-        funded: false,
-        open_to_investment: false,
-      });
+    }).select();
+    if (error || !startupData || !startupData[0]) {
+      setError(error?.message || "Failed to create startup");
+      return;
     }
+    const startupId = startupData[0].id;
+    // Insert founders (if any)
+    for (const founder of founders) {
+      let userId = null;
+      const { data: userByEmail } = await supabase.from("users").select("id").eq("email", founder).maybeSingle();
+      if (userByEmail?.id) userId = userByEmail.id;
+      else {
+        const { data: userByName } = await supabase.from("users").select("id").eq("name", founder).maybeSingle();
+        if (userByName?.id) userId = userByName.id;
+      }
+      if (userId) {
+        await supabase.from("startup_founders").insert({ startup_id: startupId, user_id: userId });
+      }
+    }
+    setSuccess(true);
+    setForm({
+      name: "",
+      logo_url: "",
+      description: "",
+      country: "",
+      incorporated: false,
+      funded: false,
+      open_to_investment: false,
+    });
+    setFounders([]);
+    setFounderInput("");
+    // Redirect to the new startup's page
+    router.push(`/startup/${startupId}`);
   }
 
   if (loading) return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
@@ -103,6 +128,42 @@ export default function ListStartupPage() {
               <label className="flex items-center gap-2">
                 <input type="checkbox" checked={form.open_to_investment} onChange={e => setForm(f => ({ ...f, open_to_investment: e.target.checked }))} /> Open to Investment
               </label>
+            </div>
+            <div className="grid gap-3">
+              <Label htmlFor="founders">Founders (add by email or name)</Label>
+              <div className="flex gap-2">
+                <Input
+                  id="founders"
+                  value={founderInput}
+                  onChange={e => setFounderInput(e.target.value)}
+                  placeholder="Enter founder email or name"
+                  onKeyDown={e => {
+                    if ((e.key === "Enter" || e.key === ",") && founderInput.trim()) {
+                      e.preventDefault();
+                      if (!founders.includes(founderInput.trim())) {
+                        setFounders(f => [...f, founderInput.trim()]);
+                      }
+                      setFounderInput("");
+                    }
+                  }}
+                />
+                <Button type="button" onClick={() => {
+                  if (founderInput.trim() && !founders.includes(founderInput.trim())) {
+                    setFounders(f => [...f, founderInput.trim()]);
+                    setFounderInput("");
+                  }
+                }}>Add</Button>
+              </div>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {founders.map((f, i) => (
+                  <span key={i} className="flex items-center gap-1 px-2 py-1 bg-muted rounded text-xs">
+                    {f}
+                    <button type="button" aria-label="Remove founder" onClick={() => setFounders(founders.filter((x, idx) => idx !== i))}>
+                      <X className="w-3 h-3 ml-1" />
+                    </button>
+                  </span>
+                ))}
+              </div>
             </div>
             {error && <div className="text-destructive text-sm">{error}</div>}
             {success && <div className="text-green-700 text-sm">Startup listed successfully!</div>}

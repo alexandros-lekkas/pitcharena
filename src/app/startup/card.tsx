@@ -31,20 +31,22 @@ export interface StartupCardProps {
 }
 
 export function StartupCard(props: StartupCardProps) {
+  const logoSrc = props.logo && props.logo.trim() !== "" ? props.logo : null;
+
   return (
     <Link href={`/startup/${props.id}`} className="block group">
       <Card className="relative flex flex-col gap-3 p-6 bg-card text-card-foreground rounded-xl shadow-md border-l-4 border-secondary min-h-[320px] transition-transform group-hover:scale-[1.025] group-hover:shadow-lg cursor-pointer">
         {/* Logo and Name Row */}
         <div className="flex gap-3 items-center mb-1">
           <div className="flex overflow-hidden justify-center items-center w-12 h-12 text-xl font-bold rounded text-muted bg-muted">
-            {props.logo ? (
+            {logoSrc ? (
               <img
-                src={props.logo}
+                src={logoSrc}
                 alt={props.name}
                 className="object-cover w-12 h-12 rounded"
               />
             ) : (
-              <ImageIcon className="w-8 h-8" />
+              <ImageIcon className="w-8 h-8 mx-auto" />
             )}
           </div>
           <div className="flex-1 min-w-0">
@@ -79,24 +81,29 @@ export function StartupCard(props: StartupCardProps) {
         {/* Founders */}
         <div className="mb-2">
           <span className="text-sm text-muted-foreground">Founders:</span>
-          <span className="flex gap-1 items-center ml-2">
+          <span className="flex gap-2 items-center ml-2">
             {props.founders.length === 0 ? (
-              <Avatar className="w-7 h-7 text-muted-foreground bg-muted">
-                <User className="w-4 h-4" />
-              </Avatar>
+              <span className="flex items-center gap-1">
+                <Avatar className="w-7 h-7 flex items-center justify-center text-muted-foreground bg-muted">
+                  <User className="w-4 h-4 mx-auto" />
+                </Avatar>
+                <span className="text-xs text-muted-foreground">Unknown</span>
+              </span>
             ) : (
               props.founders.map((f, i) => (
-                <Avatar
-                  key={i}
-                  className="flex justify-center items-center -ml-2 w-7 h-7 text-xs font-bold border-2 text-primary bg-muted border-card first:ml-0"
-                >
-                  {f.length <= 2
-                    ? f
-                    : f
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
-                </Avatar>
+                <span key={i} className="flex items-center gap-1">
+                  <Avatar
+                    className="flex justify-center items-center w-7 h-7 text-xs font-bold border-2 text-primary bg-muted border-card"
+                  >
+                    {f.length <= 2
+                      ? f
+                      : f
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
+                  </Avatar>
+                  <span className="text-xs text-muted-foreground">{f}</span>
+                </span>
               ))
             )}
           </span>
