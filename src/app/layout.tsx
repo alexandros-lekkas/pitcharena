@@ -3,8 +3,8 @@ import { Figtree } from "next/font/google";
 
 import { AuthProvider } from "@/lib/providers/auth-provider";
 
-import Navbar from "@/components/layout/navbar";
-import Footer from "@/components/layout/footer";
+import { Navbar } from "@/components/layout/navbar";
+import { Footer } from "@/components/layout/footer";
 
 import "./globals.css";
 
