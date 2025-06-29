@@ -154,41 +154,12 @@ export type Database = {
           },
         ]
       }
-      startup_founders: {
-        Row: {
-          startup_id: string
-          user_id: string
-        }
-        Insert: {
-          startup_id: string
-          user_id: string
-        }
-        Update: {
-          startup_id?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "startup_founders_startup_id_fkey"
-            columns: ["startup_id"]
-            isOneToOne: false
-            referencedRelation: "startups"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "startup_founders_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       startups: {
         Row: {
           country: string
           created_by: string
           description: string | null
+          founders: string[] | null
           funded: boolean
           id: string
           incorporated: boolean
@@ -201,6 +172,7 @@ export type Database = {
           country: string
           created_by: string
           description?: string | null
+          founders?: string[] | null
           funded?: boolean
           id?: string
           incorporated?: boolean
@@ -213,6 +185,7 @@ export type Database = {
           country?: string
           created_by?: string
           description?: string | null
+          founders?: string[] | null
           funded?: boolean
           id?: string
           incorporated?: boolean

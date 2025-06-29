@@ -17,7 +17,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <body className={`${figtree.className} text-base-content`}>
           <Navbar />
 
-          <main className="min-h-screen bg-background text-foreground">
+          <main className="min-h-screen bg-background text-foreground p-6">
             {children}
           </main>
 
